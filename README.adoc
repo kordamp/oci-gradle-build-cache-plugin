@@ -1,0 +1,116 @@
+= oci-gradle-build-cache-plugin
+:linkattrs:
+:project-name: oci-gradle-build-cache-plugin
+:plugin-version: 0.1.0
+
+image:http://img.shields.io/travis/aalmiray/{project-name}/master.svg["Build Status", link="https://travis-ci.org/aalmiray/{project-name}"]
+image:http://img.shields.io/badge/license-ASF2-blue.svg["Apache License 2", link="http://www.apache.org/licenses/LICENSE-2.0.txt"]
+image:https://api.bintray.com/packages/aalmiray/kordamp/{project-name}/images/download.svg[link="https://bintray.com/aalmiray/kordamp/{project-name}/_latestVersion"]
+image:https://img.shields.io/badge/donations-Patreon-orange.svg[link="https://www.patreon.com/user?u=6609318"]
+
+---
+
+This is a custom Gradle link:https://docs.gradle.org/current/userguide/build_cache.html[build cache] implementation which uses the link:https://www.oracle.com/cloud/[Oracle Cloud] to store the cache objects.
+
+WARNING:  This plugin is not endorsed by Oracle nor does the company provide any support for it.
+
+== Usage
+
+Add the following to your `settings.gradle` file
+
+[source,groovy]
+[subs="attributes"]
+----
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'org.kordamp.gradle:{project-name}:{plugin-version}'
+    }
+}
+apply plugin: 'org.kordamp.gradle.oci-build-cache'
+----
+
+== Configuration
+
+Add the following to your `settings.gradle` file
+
+[source,groovy]
+[subs="attributes"]
+----
+ext.isCiServer = System.getenv().containsKey('CI')
+
+buildCache {
+    local {
+        enabled = !isCiServer
+    }
+    remote(org.kordamp.gradle.plugin.buildcache.OCIBuildCache) {
+        compartmentId = <compartment-id>
+        push = isCiServer
+    }
+}
+----
+
+The plugin offers the following configuration properties
+
+[options="header"]
+|===
+| Configuration Key | Description                      | Mandatory | Default Value
+| profile           | Name of the OCI profile to use   | no        | DEFAULT
+| compartmentId     | Compartment that owns the bucket | yes       |
+| bucket            | Bucket name                      | no        | build-cache
+|===
+
+You can configure authentication in two ways:
+
+ 1. Using the standard `~/.oci/config` file.
+ 2. Defining a `config` block on the `remote` block.
+
+=== Standard Config File
+
+The format of the configuration file is specified at link:https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/javasdkgettingstarted.htm[this page],
+it looks something similar to
+
+[source]
+.~/.oci/config
+----
+[DEFAULT]
+user=ocid1.user.oc1...
+tenancy=ocid1.tenancy.oc1...
+region=eu-frankfurt-1
+key_file=~/.oci/oci_api_key.pem
+pass_phrase=<secret>
+fingerprint=f9:14:d0:...
+----
+
+=== Config Block
+
+Alternatively you may define a `config` block. This block defines properties that match settings found on the config file
+
+[source,groovy]
+.settings.gradle
+----
+buildCache {
+    local {
+        enabled = !isCiServer
+    }
+    remote(org.kordamp.gradle.plugin.buildcache.OCIBuildCache) {
+        compartmentId = <compartment-id>
+        bucket = <bucket-name>
+        push = isCiServer
+        config {
+            userId      = 'ocid1.user.oc1...'
+            tenantId    = 'ocid1.tenancy.oc1...'
+            region      = 'eu-frankfurt-1'
+            keyfile     = '/.oci/oci_api_key.pem')
+            passphrase  = '<secret>')
+            fingerprint = 'f9:14:d0:...'
+        }
+    }
+}
+----
+
+More details about configuring the Gradle build cache can be found in the
+link:https://docs.gradle.org/current/userguide/build_cache.html#sec:build_cache_configure[official Gradle documentation].
+

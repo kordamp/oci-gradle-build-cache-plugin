@@ -1,0 +1,71 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2019 Andres Almiray.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+plugins {
+    id 'java-library'
+    id 'groovy'
+    id 'org.kordamp.gradle.kordamp-parentpom'
+    id 'org.kordamp.gradle.groovy-project'
+    id 'org.kordamp.gradle.bintray'
+    id 'org.kordamp.gradle.plugin'
+}
+
+config {
+    info {
+        name          = rootProject.name
+        description   = 'OCI Gradle BuildCache Plugin'
+        inceptionYear = '2019'
+        tags          = ['oci', 'buildcache']
+
+        specification { enabled = false }
+    }
+
+    groovydoc {
+        replaceJavadoc = true
+    }
+
+    plugin {
+        enabled             = true
+        id                  = 'org.kordamp.gradle.oci-build-cache'
+        implementationClass = 'org.kordamp.gradle.plugin.buildcache.OCIBuildCachePlugin'
+    }
+
+    bintray {
+        skipMavenSync = true
+    }
+}
+
+dependencies {
+    compileOnly gradleApi()
+
+    // api "com.oracle.oci.sdk:oci-java-sdk-common:$ociJavaSdkVersion"
+    // api "com.oracle.oci.sdk:oci-java-sdk-core:$ociJavaSdkVersion"
+    // api "com.oracle.oci.sdk:oci-java-sdk-identity:$ociJavaSdkVersion"
+    api "com.oracle.oci.sdk:oci-java-sdk-objectstorage:$ociJavaSdkVersion"
+}
+
+processResources {
+    filesMatching(['**/*.properties']) {
+        expand(
+            'version': project.version,
+            'id': 'oci-buildcache',
+            'name': 'OCI Gradle BuildCache plugin'
+        )
+    }
+}
+
+task publishRelease(dependsOn: [bintrayUpload, publishPlugins]) {}
