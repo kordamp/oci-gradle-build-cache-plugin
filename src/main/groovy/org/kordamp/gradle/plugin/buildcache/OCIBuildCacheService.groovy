@@ -21,10 +21,14 @@ import com.oracle.bmc.model.BmcException
 import com.oracle.bmc.objectstorage.ObjectStorageClient
 import com.oracle.bmc.objectstorage.model.BucketSummary
 import com.oracle.bmc.objectstorage.model.CreateBucketDetails
+import com.oracle.bmc.objectstorage.model.ObjectLifecycleRule
+import com.oracle.bmc.objectstorage.model.PutObjectLifecyclePolicyDetails
 import com.oracle.bmc.objectstorage.requests.CreateBucketRequest
 import com.oracle.bmc.objectstorage.requests.GetNamespaceRequest
+import com.oracle.bmc.objectstorage.requests.GetObjectLifecyclePolicyRequest
 import com.oracle.bmc.objectstorage.requests.GetObjectRequest
 import com.oracle.bmc.objectstorage.requests.ListBucketsRequest
+import com.oracle.bmc.objectstorage.requests.PutObjectLifecyclePolicyRequest
 import com.oracle.bmc.objectstorage.requests.PutObjectRequest
 import com.oracle.bmc.objectstorage.responses.GetObjectResponse
 import groovy.transform.CompileStatic
@@ -146,13 +150,14 @@ class OCIBuildCacheService implements BuildCacheService {
 
             if (bucketSummary) {
                 logger.info("Bucket '${buildCache.bucket}' was found.")
+                ensureLifecyclePolicyExists()
                 return
             }
         } catch (BmcException e) {
-            throw new BuildCacheException("Error while resolving ${namespaceName}:{$buildCache.bucket} bucket", e)
+            throw new BuildCacheException("Error while resolving ${namespaceName}:$buildCache.bucket} bucket", e)
         }
 
-        // 2. Create
+        // 2. Create bucket
         logger.info('Provisioning Bucket. This may take a while.')
         try {
             client.createBucket(CreateBucketRequest.builder()
@@ -163,7 +168,57 @@ class OCIBuildCacheService implements BuildCacheService {
                     .build())
                 .build())
         } catch (BmcException e) {
-            throw new BuildCacheException("Error while provisioning ${namespaceName}:{$buildCache.bucket} bucket", e)
+            throw new BuildCacheException("Error while provisioning ${namespaceName}:$buildCache.bucket} bucket", e)
+        }
+
+        // 3. Create lifecycle policy
+        createObjectLifecyclePolicy([createObjectLifecycleRule()])
+    }
+
+    private void ensureLifecyclePolicyExists() {
+        List<ObjectLifecycleRule> rules = retrieveObjectLifecycleRules()
+        if (rules.empty) {
+            createObjectLifecyclePolicy([createObjectLifecycleRule()])
+        }
+    }
+
+    private List<ObjectLifecycleRule> retrieveObjectLifecycleRules() {
+        try {
+            return client.getObjectLifecyclePolicy(GetObjectLifecyclePolicyRequest.builder()
+                .namespaceName(namespaceName)
+                .bucketName(buildCache.bucket)
+                .build())
+                .objectLifecyclePolicy
+                .items ?: []
+        } catch (BmcException e) {
+            if (e.getStatusCode() == 404) {
+                return []
+            }
+            throw new BuildCacheException("Error while retrieving object lifecycle policy on ${namespaceName}:$buildCache.bucket} bucket", e)
+        }
+    }
+
+    private ObjectLifecycleRule createObjectLifecycleRule() {
+        ObjectLifecycleRule.builder()
+            .name('delete-objects-after-' + buildCache.policy.amount + '-' + buildCache.policy.unit.toLowerCase() + '-rule')
+            .action('DELETE')
+            .timeAmount(buildCache.policy.amount)
+            .timeUnit(ObjectLifecycleRule.TimeUnit.valueOf(buildCache.policy.unit.toLowerCase().capitalize()))
+            .isEnabled(true)
+            .build()
+    }
+
+    private void createObjectLifecyclePolicy(List<ObjectLifecycleRule> rules) {
+        try {
+            client.putObjectLifecyclePolicy(PutObjectLifecyclePolicyRequest.builder()
+                .namespaceName(namespaceName)
+                .bucketName(buildCache.bucket)
+                .putObjectLifecyclePolicyDetails(PutObjectLifecyclePolicyDetails.builder()
+                    .items(rules)
+                    .build())
+                .build())
+        } catch (Exception e) {
+            throw new BuildCacheException("Error while setting object lifecycle policy on ${namespaceName}:$buildCache.bucket} bucket", e)
         }
     }
 }

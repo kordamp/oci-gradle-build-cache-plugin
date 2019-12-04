@@ -17,27 +17,11 @@
  */
 package org.kordamp.gradle.plugin.buildcache
 
-import groovy.transform.CompileStatic
-import org.gradle.api.Action
-import org.gradle.caching.configuration.AbstractBuildCache
-
 /**
  * @author Andres Almiray
- * @since 0.1.0
+ * @since 0.2.0
  */
-@CompileStatic
-class OCIBuildCache extends AbstractBuildCache {
-    String profile
-    String compartmentId
-    String bucket
-    OCIConfig config = new OCIConfig()
-    OCIPolicy policy = new OCIPolicy()
-
-    void config(Action<? extends OCIConfig> action) {
-        action.execute(config)
-    }
-
-    void policy(Action<? extends OCIPolicy> action) {
-        action.execute(policy)
-    }
+class OCIPolicy {
+    Long amount = 30L
+    String unit = 'DAYS'
 }

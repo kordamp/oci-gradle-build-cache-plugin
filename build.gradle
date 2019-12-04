@@ -52,9 +52,6 @@ config {
 dependencies {
     compileOnly gradleApi()
 
-    // api "com.oracle.oci.sdk:oci-java-sdk-common:$ociJavaSdkVersion"
-    // api "com.oracle.oci.sdk:oci-java-sdk-core:$ociJavaSdkVersion"
-    // api "com.oracle.oci.sdk:oci-java-sdk-identity:$ociJavaSdkVersion"
     api "com.oracle.oci.sdk:oci-java-sdk-objectstorage:$ociJavaSdkVersion"
 }
 

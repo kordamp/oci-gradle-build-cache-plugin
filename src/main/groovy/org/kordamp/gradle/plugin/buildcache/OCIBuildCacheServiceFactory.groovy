@@ -24,6 +24,7 @@ import com.oracle.bmc.auth.AuthenticationDetailsProvider
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider
 import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider
 import com.oracle.bmc.objectstorage.ObjectStorageClient
+import com.oracle.bmc.objectstorage.model.ObjectLifecycleRule
 import groovy.transform.CompileStatic
 import org.gradle.caching.BuildCacheService
 import org.gradle.caching.BuildCacheServiceFactory
@@ -64,7 +65,24 @@ class OCIBuildCacheServiceFactory implements BuildCacheServiceFactory<OCIBuildCa
     private AuthenticationDetailsProvider validateConfig(OCIBuildCache buildCache) {
         List<String> errors = []
         if (isBlank(buildCache.compartmentId)) {
-            throw new IllegalStateException("Missing value for 'buildCache.compartmentId'")
+            errors << "Missing value for 'buildCache.compartmentId'"
+        }
+
+        if (buildCache.policy.amount < 1L) {
+            errors << "Invalid value for 'buildCache.policy.amount'. Value must be greater than 1"
+        }
+        if (isBlank(buildCache.policy.unit)) {
+            errors << "Missing value for 'buildCache.policy.unit'"
+        }
+        try {
+            ObjectLifecycleRule.TimeUnit.valueOf(buildCache.policy.unit.toLowerCase().capitalize())
+        } catch (Exception e) {
+            e.printStackTrace()
+            errors << "Invalid value for 'buildCache.policy.unit'. Value must be 'Days' or 'Zears'"
+        }
+
+        if (errors.size() > 0) {
+            throw new IllegalStateException(errors.join('\n'))
         }
 
         if (buildCache.config.empty) {

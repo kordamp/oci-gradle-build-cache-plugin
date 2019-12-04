@@ -14,6 +14,14 @@ This is a custom Gradle link:https://docs.gradle.org/current/userguide/build_cac
 
 WARNING:  This plugin is not endorsed by Oracle nor does the company provide any support for it.
 
+== Prerequisites
+
+1. An Oracle Cloud account. Sign up for an Always Free tire account at at link:http://oracle.com/cloud/free[].
+2. A resource compartment. It's recommended to use a different compartment that the default `root`.
+3. Setup an Object Lifecycle Policy on the compartment. Refer to link:https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usinglifecyclepolicies.htm[]
+
+Gradle 5.x and Java 8 are the minimum requirements to run this plugin.
+
 == Usage
 
 Add the following to your `settings.gradle` file
@@ -23,12 +31,14 @@ Add the following to your `settings.gradle` file
 ----
 buildscript {
     repositories {
+        jcenter()
         gradlePluginPortal()
     }
     dependencies {
         classpath 'org.kordamp.gradle:{project-name}:{plugin-version}'
     }
 }
+
 apply plugin: 'org.kordamp.gradle.oci-build-cache'
 ----
 
@@ -37,7 +47,7 @@ apply plugin: 'org.kordamp.gradle.oci-build-cache'
 Add the following to your `settings.gradle` file
 
 [source,groovy]
-[subs="attributes"]
+[subs="attributes,verbatim"]
 ----
 ext.isCiServer = System.getenv().containsKey('CI')
 
@@ -60,7 +70,28 @@ The plugin offers the following configuration properties
 | profile           | Name of the OCI profile to use   | no        | DEFAULT
 | compartmentId     | Compartment that owns the bucket | yes       |
 | bucket            | Bucket name                      | no        | build-cache
+| policy            | Object lifecycle policy (DELETE) | no        | amount: 30L, unit: days
 |===
+
+The default object lifecycle policy is to delete cached items after 30 days. You can change these defaults with the following snippet
+
+[source,groovy]
+[subs="attributes,verbatim"]
+.settings.gradle
+----
+buildCache {
+    local {
+        enabled = !isCiServer
+    }
+    remote(org.kordamp.gradle.plugin.buildcache.OCIBuildCache) {
+        compartmentId = <compartment-id>
+        push = isCiServer
+        policy {
+            amount = 90L // 3 months
+        }
+    }
+}
+----
 
 You can configure authentication in two ways:
 
@@ -72,7 +103,8 @@ You can configure authentication in two ways:
 The format of the configuration file is specified at link:https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/javasdkgettingstarted.htm[this page],
 it looks something similar to
 
-[source]
+[source,groovy]
+[subs="attributes,verbatim"]
 .~/.oci/config
 ----
 [DEFAULT]
@@ -89,6 +121,7 @@ fingerprint=f9:14:d0:...
 Alternatively you may define a `config` block. This block defines properties that match settings found on the config file
 
 [source,groovy]
+[subs="attributes,verbatim"]
 .settings.gradle
 ----
 buildCache {
