@@ -78,7 +78,7 @@ class OCIBuildCacheServiceFactory implements BuildCacheServiceFactory<OCIBuildCa
             ObjectLifecycleRule.TimeUnit.valueOf(buildCache.policy.unit.toLowerCase().capitalize())
         } catch (Exception e) {
             e.printStackTrace()
-            errors << "Invalid value for 'buildCache.policy.unit'. Value must be 'Days' or 'Zears'"
+            errors << "Invalid value for 'buildCache.policy.unit'. Value must be 'Days' or 'Years'"
         }
 
         if (errors.size() > 0) {
@@ -86,7 +86,8 @@ class OCIBuildCacheServiceFactory implements BuildCacheServiceFactory<OCIBuildCa
         }
 
         if (buildCache.config.empty) {
-            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse(CONFIG_LOCATION, buildCache.profile ?: 'DEFAULT')
+            String configFileLocation = buildCache.configFile ?: CONFIG_LOCATION
+            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse(configFileLocation, buildCache.profile ?: 'DEFAULT')
             ConfigFileAuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile)
             buildCache.config.region = provider.region.regionId
             return provider

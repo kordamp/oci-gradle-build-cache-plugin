@@ -27,6 +27,7 @@ import org.gradle.caching.configuration.AbstractBuildCache
  */
 @CompileStatic
 class OCIBuildCache extends AbstractBuildCache {
+    String configFile = '~/.oci/config'
     String profile
     String compartmentId
     String bucket

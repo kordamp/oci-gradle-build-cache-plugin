@@ -67,6 +67,7 @@ The plugin offers the following configuration properties
 [options="header"]
 |===
 | Configuration Key | Description                      | Mandatory | Default Value
+| configFile        | Location of the config file      | no        | ~/.oci/config
 | profile           | Name of the OCI profile to use   | no        | DEFAULT
 | compartmentId     | Compartment that owns the bucket | yes       |
 | bucket            | Bucket name                      | no        | build-cache
@@ -95,7 +96,7 @@ buildCache {
 
 You can configure authentication in two ways:
 
- 1. Using the standard `~/.oci/config` file.
+ 1. Using the standard configuration file, typically located at `~/.oci/config`.
  2. Defining a `config` block on the `remote` block.
 
 === Standard Config File
