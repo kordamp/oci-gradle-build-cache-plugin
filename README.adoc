@@ -16,7 +16,7 @@ WARNING:  This plugin is not endorsed by Oracle nor does the company provide any
 
 == Prerequisites
 
-1. An Oracle Cloud account. Sign up for an Always Free tire account at at link:http://oracle.com/cloud/free[].
+1. An Oracle Cloud account. Sign up for an Always Free tier account at at link:http://oracle.com/cloud/free[].
 2. A resource compartment. It's recommended to use a different compartment that the default `root`.
 3. Setup an Object Lifecycle Policy on the compartment. Refer to link:https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usinglifecyclepolicies.htm[]
 
