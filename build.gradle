@@ -59,8 +59,8 @@ processResources {
     filesMatching(['**/*.properties']) {
         expand(
             'version': project.version,
-            'id': 'oci-buildcache',
-            'name': 'OCI Gradle BuildCache plugin'
+            'id'     : 'oci-buildcache',
+            'name'   : 'OCI Gradle BuildCache plugin'
         )
     }
 }
