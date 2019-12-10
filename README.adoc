@@ -138,7 +138,7 @@ buildCache {
             tenantId    = 'ocid1.tenancy.oc1...'
             region      = 'eu-frankfurt-1'
             keyfile     = '~/.oci/oci_api_key.pem'
-            passphrase  = '<secret>')
+            passphrase  = '<secret>'
             fingerprint = 'f9:14:d0:...'
         }
     }
