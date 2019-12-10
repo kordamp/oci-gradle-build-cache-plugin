@@ -19,7 +19,6 @@ package org.kordamp.gradle.plugin.buildcache
 
 import com.oracle.bmc.model.BmcException
 import com.oracle.bmc.objectstorage.ObjectStorageClient
-import com.oracle.bmc.objectstorage.model.BucketSummary
 import com.oracle.bmc.objectstorage.model.CreateBucketDetails
 import com.oracle.bmc.objectstorage.model.ObjectLifecycleRule
 import com.oracle.bmc.objectstorage.model.PutObjectLifecyclePolicyDetails
@@ -27,7 +26,7 @@ import com.oracle.bmc.objectstorage.requests.CreateBucketRequest
 import com.oracle.bmc.objectstorage.requests.GetNamespaceRequest
 import com.oracle.bmc.objectstorage.requests.GetObjectLifecyclePolicyRequest
 import com.oracle.bmc.objectstorage.requests.GetObjectRequest
-import com.oracle.bmc.objectstorage.requests.ListBucketsRequest
+import com.oracle.bmc.objectstorage.requests.HeadBucketRequest
 import com.oracle.bmc.objectstorage.requests.PutObjectLifecyclePolicyRequest
 import com.oracle.bmc.objectstorage.requests.PutObjectRequest
 import com.oracle.bmc.objectstorage.responses.GetObjectResponse
@@ -142,19 +141,16 @@ class OCIBuildCacheService implements BuildCacheService {
     private void ensureBucketExists() {
         // 1. Check if it exists
         try {
-            List<BucketSummary> bucketSummaries = client.listBuckets(ListBucketsRequest.builder()
-                .compartmentId(buildCache.compartmentId)
+            client.headBucket(HeadBucketRequest.builder()
                 .namespaceName(namespaceName)
-                .build()).items
-            BucketSummary bucketSummary = bucketSummaries.find { BucketSummary c -> c.name == buildCache.bucket }
+                .bucketName(buildCache.bucket)
+                .build())
 
-            if (bucketSummary) {
-                logger.info("Bucket '${buildCache.bucket}' was found.")
-                ensureLifecyclePolicyExists()
-                return
-            }
+            logger.info("Bucket '${buildCache.bucket}' was found.")
+            ensureLifecyclePolicyExists()
+            return
         } catch (BmcException e) {
-            throw new BuildCacheException("Error while resolving ${namespaceName}:$buildCache.bucket} bucket", e)
+            // exception most likely means the bucket does not exist, continue
         }
 
         // 2. Create bucket
@@ -168,7 +164,7 @@ class OCIBuildCacheService implements BuildCacheService {
                     .build())
                 .build())
         } catch (BmcException e) {
-            throw new BuildCacheException("Error while provisioning ${namespaceName}:$buildCache.bucket} bucket", e)
+            throw new BuildCacheException("Error while provisioning ${namespaceName}:${buildCache.bucket} bucket", e)
         }
 
         // 3. Create lifecycle policy
@@ -194,7 +190,7 @@ class OCIBuildCacheService implements BuildCacheService {
             if (e.getStatusCode() == 404) {
                 return []
             }
-            throw new BuildCacheException("Error while retrieving object lifecycle policy on ${namespaceName}:$buildCache.bucket} bucket", e)
+            throw new BuildCacheException("Error while retrieving object lifecycle policy on ${namespaceName}:${buildCache.bucket} bucket", e)
         }
     }
 
@@ -218,7 +214,7 @@ class OCIBuildCacheService implements BuildCacheService {
                     .build())
                 .build())
         } catch (Exception e) {
-            throw new BuildCacheException("Error while setting object lifecycle policy on ${namespaceName}:$buildCache.bucket} bucket", e)
+            throw new BuildCacheException("Error while setting object lifecycle policy on ${namespaceName}:${buildCache.bucket} bucket", e)
         }
     }
 }
