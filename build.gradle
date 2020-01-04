@@ -68,8 +68,6 @@ processResources {
     }
 }
 
-task publishRelease(dependsOn: [bintrayUpload, publishPlugins]) {}
-
 configurations.all {
     resolutionStrategy.force "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
         "com.fasterxml.jackson.core:jackson-core:$jacksonVersion",
