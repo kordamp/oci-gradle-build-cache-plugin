@@ -39,15 +39,22 @@ config {
         }
     }
 
-    plugin {
-        enabled             = true
-        id                  = 'org.kordamp.gradle.oci-build-cache'
-        implementationClass = 'org.kordamp.gradle.plugin.buildcache.OCIBuildCachePlugin'
+    plugins {
+        plugin {
+            name                = 'oci'
+            id                  = 'org.kordamp.gradle.oci-build-cache'
+            implementationClass = 'org.kordamp.gradle.plugin.buildcache.OCIBuildCachePlugin'
+        }
     }
 
     bintray {
         skipMavenSync = true
     }
+}
+
+repositories {
+    jcenter()
+    gradlePluginPortal()
 }
 
 dependencies {

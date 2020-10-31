@@ -47,7 +47,8 @@ enforce {
     rule(enforcer.rules.ForceDependencies) { r ->
         r.dependencies.addAll "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
             "com.fasterxml.jackson.core:jackson-core:$jacksonVersion",
-            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
 
