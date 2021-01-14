@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2019-2020 Andres Almiray.
+ * Copyright 2019-2021 Andres Almiray.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,9 @@ enforce {
         r.dependencies.addAll "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
             "com.fasterxml.jackson.core:jackson-core:$jacksonVersion",
             "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion",
+            "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
+            "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion",
             "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
