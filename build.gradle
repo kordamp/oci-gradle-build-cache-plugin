@@ -19,7 +19,6 @@ plugins {
     id 'java-library'
     id 'groovy'
     id 'org.kordamp.gradle.groovy-project'
-    id 'org.kordamp.gradle.bintray'
     id 'org.kordamp.gradle.plugin'
 }
 
@@ -46,14 +45,9 @@ config {
             implementationClass = 'org.kordamp.gradle.plugin.buildcache.OCIBuildCachePlugin'
         }
     }
-
-    bintray {
-        skipMavenSync = true
-    }
 }
 
 repositories {
-    jcenter()
     gradlePluginPortal()
 }
 
