@@ -5,11 +5,12 @@
 :project-name:    oci-gradle-build-cache-plugin
 :project-group:   org.kordamp.gradle
 :project-version: 0.5.0
+:plugin-path:  org/kordamp/gradle/oci-build-cache
+:plugin-id:    org.kordamp.gradle.oci-build-cache
 
-image:https://github.com/{project-owner}/{project-name}/workflows/Build/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions"]
-image:http://img.shields.io/badge/license-ASL2-blue.svg["ASL2 Licensed", link="http://opensource.org/licenses/ASL2"]
-image:https://api.bintray.com/packages/{project-owner}/{project-repo}/{project-name}/images/download.svg[link="https://bintray.com/{project-owner}/{project-repo}/{project-name}/_latestVersion"]
-image:https://img.shields.io/badge/donations-Patreon-orange.svg[link="https://www.patreon.com/user?u=6609318"]
+image:https://img.shields.io/badge/license-ASL2-blue.svg["ASL2 Licensed", link="https://spdx.org/licenses/Apache-2.0.html"]
+image:https://github.com/{project-owner}/{project-name}/workflows/Early%20Access/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions"]
+image:https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&metadataUrl=https://plugins.gradle.org/m2/{plugin-path}/{plugin-id}.gradle.plugin/maven-metadata.xml["Gradle Plugin Portal, link="https://plugins.gradle.org/plugin/{plugin-id}"]
 
 ---
 
@@ -20,10 +21,10 @@ WARNING:  This plugin is not endorsed by Oracle nor does the company provide any
 == Prerequisites
 
 1. An Oracle Cloud account. Sign up for an Always Free tier account at link:http://oracle.com/cloud/free[].
-2. A resource compartment. It's recommended to use a compartment different than the default `root`.
+2. A resource compartment. It's recommended to use a compartment different from the default `root`.
 3. Setup an Object Lifecycle Policy on the compartment. Refer to link:https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usinglifecyclepolicies.htm[]
 
-Gradle 5.x and Java 8 are the minimum requirements to run this plugin.
+Gradle 6.x and Java 8 are the minimum requirements to run this plugin.
 
 == Usage
 
