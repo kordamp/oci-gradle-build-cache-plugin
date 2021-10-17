@@ -50,7 +50,9 @@ enforce {
             "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion",
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
             "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion",
-            "org.slf4j:slf4j-api:$slf4jVersion"
+            "org.slf4j:slf4j-api:$slf4jVersion",
+            "commons-codec:commons-codec:$commonsCodecVersion",
+            'jakarta.activation:jakarta.activation-api:1.2.2'
     }
 }
 
