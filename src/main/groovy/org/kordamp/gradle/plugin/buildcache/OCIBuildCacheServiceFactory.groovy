@@ -17,7 +17,6 @@
  */
 package org.kordamp.gradle.plugin.buildcache
 
-import com.google.common.base.Supplier
 import com.oracle.bmc.ConfigFileReader
 import com.oracle.bmc.Region
 import com.oracle.bmc.auth.AuthenticationDetailsProvider
@@ -30,6 +29,8 @@ import org.gradle.caching.BuildCacheService
 import org.gradle.caching.BuildCacheServiceFactory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import java.util.function.Supplier
 
 import static org.kordamp.gradle.plugin.buildcache.OCIBuildCachePlugin.isBlank
 
