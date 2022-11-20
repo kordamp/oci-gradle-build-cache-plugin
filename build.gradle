@@ -55,6 +55,7 @@ dependencies {
     compileOnly gradleApi()
 
     api "com.oracle.oci.sdk:oci-java-sdk-objectstorage:$ociJavaSdkVersion"
+    api "com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:$ociJavaSdkVersion"
 }
 
 processResources {
