@@ -42,3 +42,8 @@ announce:
   twitter:
     active: release
     status: 🚀 {{projectName}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+  mastodon:
+    active: release
+    host: https://mastodon.social
+    status: 🚀 {{projectName}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+
