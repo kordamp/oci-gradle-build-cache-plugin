@@ -54,8 +54,25 @@ repositories {
 dependencies {
     compileOnly gradleApi()
 
+    platform "com.oracle.oci.sdk:oci-java-sdk-bom:$ociJavaSdkVersion"
+    platform "com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:$ociJavaSdkVersion"
+    api "com.oracle.oci.sdk:oci-java-sdk-core:$ociJavaSdkVersion"
+    api "com.oracle.oci.sdk:oci-java-sdk-identity:$ociJavaSdkVersion"
     api "com.oracle.oci.sdk:oci-java-sdk-objectstorage:$ociJavaSdkVersion"
+    api "com.oracle.oci.sdk:oci-java-sdk-addons-apache-configurator-jersey:$ociJavaSdkVersion"
     api "com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:$ociJavaSdkVersion"
+}
+
+def scompat = project.findProperty('sourceCompatibility')
+def tcompat = project.findProperty('targetCompatibility')
+
+tasks.withType(JavaCompile) { JavaCompile c ->
+    if (scompat) c.sourceCompatibility = scompat
+    if (tcompat) c.targetCompatibility = tcompat
+}
+tasks.withType(GroovyCompile) { GroovyCompile c ->
+    if (scompat) c.sourceCompatibility = scompat
+    if (tcompat) c.targetCompatibility = tcompat
 }
 
 processResources {

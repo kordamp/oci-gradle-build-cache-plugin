@@ -76,6 +76,7 @@ The plugin offers the following configuration properties
 | compartmentId     | Compartment that owns the bucket | yes       |
 | bucket            | Bucket name                      | no        | build-cache
 | policy            | Object lifecycle policy (DELETE) | no        | amount: 30L, unit: days
+| failOnError       | Fail the build on config error   | no        | true
 |===
 
 The default object lifecycle policy is to delete cached items after 30 days. You can change these defaults with the following snippet

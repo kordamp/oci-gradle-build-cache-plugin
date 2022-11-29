@@ -43,9 +43,6 @@ enforce {
     rule(enforcer.rules.BanDuplicateClasses) { r ->
         r.enabled = false
     }
-    rule(enforcer.rules.ExcludeDependencies) { r ->
-        r.exclude('org.glassfish.hk2.external:javax.inject')
-    }
     rule(enforcer.rules.ForceDependencies) { r ->
         r.dependencies.addAll "com.fasterxml.jackson.core:jackson-bom:$jacksonVersion",
             "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",

@@ -18,28 +18,31 @@
 package org.kordamp.gradle.plugin.buildcache
 
 import groovy.transform.CompileStatic
-import org.gradle.api.Action
-import org.gradle.caching.configuration.AbstractBuildCache
+import org.gradle.caching.BuildCacheEntryReader
+import org.gradle.caching.BuildCacheEntryWriter
+import org.gradle.caching.BuildCacheException
+import org.gradle.caching.BuildCacheKey
+import org.gradle.caching.BuildCacheService
 
 /**
  * @author Andres Almiray
- * @since 0.1.0
+ * @since 0.10.0
  */
 @CompileStatic
-class OCIBuildCache extends AbstractBuildCache {
-    String configFile = '~/.oci/config'
-    String profile
-    String compartmentId
-    String bucket
-    OCIConfig config = new OCIConfig()
-    OCIPolicy policy = new OCIPolicy()
-    Boolean failOnError = true
-
-    void config(Action<? extends OCIConfig> action) {
-        action.execute(config)
+class NoopBuildCacheService implements BuildCacheService {
+    @Override
+    boolean load(BuildCacheKey buildCacheKey, BuildCacheEntryReader buildCacheEntryReader) throws BuildCacheException {
+        // noop
+        return false
     }
 
-    void policy(Action<? extends OCIPolicy> action) {
-        action.execute(policy)
+    @Override
+    void store(BuildCacheKey buildCacheKey, BuildCacheEntryWriter buildCacheEntryWriter) throws BuildCacheException {
+        // noop
+    }
+
+    @Override
+    void close() throws IOException {
+        // noop
     }
 }
