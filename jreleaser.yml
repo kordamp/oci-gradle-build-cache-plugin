@@ -40,10 +40,9 @@ release:
 
 announce:
   twitter:
-    active: release
+    active: RELEASE
     status: 🚀 {{projectName}} {{projectVersion}} has been released! {{releaseNotesUrl}}
   mastodon:
-    active: release
+    active: RELEASE
     host: https://mastodon.social
     status: 🚀 {{projectName}} {{projectVersion}} has been released! {{releaseNotesUrl}}
-

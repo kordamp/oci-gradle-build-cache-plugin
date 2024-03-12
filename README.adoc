@@ -24,7 +24,7 @@ WARNING:  This plugin is not endorsed by Oracle nor does the company provide any
 2. A resource compartment. It's recommended to use a compartment different from the default `root`.
 3. Setup an Object Lifecycle Policy on the compartment. Refer to link:https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usinglifecyclepolicies.htm[]
 
-Gradle 6.x and Java 8 are the minimum requirements to run this plugin.
+Gradle 8.x and Java 11 are the minimum requirements to run this plugin.
 
 == Usage
 
